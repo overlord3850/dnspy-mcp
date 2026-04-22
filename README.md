@@ -75,7 +75,7 @@ All tools accept an optional `assembly_path` parameter to override the default a
 Requires .NET 9 SDK.
 
 ```
-git clone https://github.com/YOUR_USERNAME/dnspy-mcp.git
+git clone https://github.com/overlord3850/dnspy-mcp.git
 cd dnspy-mcp/DnSpyHelper
 dotnet publish -c Release -r win-x64 --no-self-contained -o binpublish
 ```
