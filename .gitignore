@@ -1,0 +1,15 @@
+# .NET build artifacts
+DnSpyHelper/bin/
+DnSpyHelper/obj/
+DnSpyHelper/binpublish/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
