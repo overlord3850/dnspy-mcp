@@ -55,18 +55,89 @@ All tools accept an optional `assembly_path` parameter to override the default a
    ```
    pip install "mcp>=1.2.0,<2"
    ```
-4. Add to `%USERPROFILE%\.claude\settings.json`:
+4. Register the MCP server (see [MCP Configuration](#mcp-configuration) for details):
+
+   Add to `.mcp.json` in your **project directory** (the folder you run Claude Code from):
    ```json
-   "dnspy": {
-     "command": "python",
-     "args": [
-       "C:\\path\\to\\bridge_mcp_dnspy.py",
-       "--assembly", "C:\\path\\to\\YourAssembly.exe",
-       "--helper",   "C:\\path\\to\\DnSpyHelper.exe"
-     ]
+   {
+     "mcpServers": {
+       "dnspy": {
+         "command": "python",
+         "args": [
+           "C:\\path\\to\\bridge_mcp_dnspy.py",
+           "--assembly", "C:\\path\\to\\YourAssembly.exe",
+           "--helper",   "C:\\path\\to\\DnSpyHelper.exe"
+         ]
+       }
+     }
    }
    ```
 5. Restart Claude Code
+
+---
+
+## MCP configuration
+
+Claude Code reads MCP servers from **two locations** (both are checked):
+
+| File | Scope | When to use |
+|---|---|---|
+| `.mcp.json` in your project directory | Project-level (recommended) | When you want the MCP available for a specific project |
+| `%USERPROFILE%\.claude\settings.json` | User-level (global) | When you want the MCP available in all projects |
+
+**Important:** If your project already has a `.mcp.json` file with other servers, add the
+`"dnspy"` entry inside the existing `"mcpServers"` block — do not create a second file.
+
+If your project has a `.claude/settings.local.json` with an `"enabledMcpjsonServers"` list,
+you must also add `"dnspy"` to that list or the server will be ignored even if configured.
+
+### Project-level (`.mcp.json`)
+
+Create or edit `.mcp.json` in the directory where you launch Claude Code:
+
+```json
+{
+  "mcpServers": {
+    "dnspy": {
+      "command": "python",
+      "args": [
+        "C:\\path\\to\\bridge_mcp_dnspy.py",
+        "--assembly", "C:\\path\\to\\YourAssembly.exe",
+        "--helper",   "C:\\path\\to\\DnSpyHelper.exe"
+      ]
+    }
+  }
+}
+```
+
+### User-level (`settings.json`)
+
+Edit `%USERPROFILE%\.claude\settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "dnspy": {
+      "command": "python",
+      "args": [
+        "C:\\path\\to\\bridge_mcp_dnspy.py",
+        "--assembly", "C:\\path\\to\\YourAssembly.exe",
+        "--helper",   "C:\\path\\to\\DnSpyHelper.exe"
+      ]
+    }
+  }
+}
+```
+
+### Verify
+
+After restarting Claude Code, run:
+
+```
+claude mcp list
+```
+
+You should see `dnspy` listed as `Connected`.
 
 ---
 

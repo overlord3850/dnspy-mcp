@@ -663,7 +663,16 @@ All commands exit 0 and print to stdout on success. Errors go to stderr and exit
 
 ## Step 7 — Register with Claude Code
 
-Edit `%USERPROFILE%\.claude\settings.json` and add a `dnspy` entry under `mcpServers`.
+Claude Code reads MCP server configuration from **two locations**:
+
+| File | Scope | When to use |
+|---|---|---|
+| `.mcp.json` in your project directory | Project-level (recommended) | When you want the MCP available for a specific project |
+| `%USERPROFILE%\.claude\settings.json` | User-level (global) | When you want the MCP available in all projects |
+
+### Option A — Project-level `.mcp.json` (recommended)
+
+Create or edit `.mcp.json` in the directory where you launch Claude Code.
 Adjust the paths to match your actual directory layout.
 
 ```json
@@ -683,15 +692,53 @@ Adjust the paths to match your actual directory layout.
 }
 ```
 
+If the file already exists with other MCP servers, add the `"dnspy"` entry inside
+the existing `"mcpServers"` block.
+
+> **Note:** If your project has a `.claude/settings.local.json` with an
+> `"enabledMcpjsonServers"` list, you must also add `"dnspy"` to that array.
+> Otherwise the server will be silently ignored even if configured in `.mcp.json`.
+
+### Option B — User-level `settings.json` (global)
+
+Edit `%USERPROFILE%\.claude\settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "dnspy": {
+      "command": "python",
+      "args": [
+        "C:\\path\\to\\dnspy-mcp\\bridge_mcp_dnspy.py",
+        "--assembly",
+        "C:\\path\\to\\YourAssembly.exe",
+        "--helper",
+        "C:\\path\\to\\dnspy-mcp\\DnSpyHelper\\binpublish\\DnSpyHelper.exe"
+      ]
+    }
+  }
+}
+```
+
+### Configuration notes
+
 - `--assembly` sets the **default** assembly. Every tool accepts an `assembly_path` parameter to override this at call time.
 - `--helper` must point to the `DnSpyHelper.exe` produced in Step 5.
-- If `settings.json` already has other MCP servers, add a comma between entries and do not introduce a trailing comma after the last entry (the file is strict JSON).
+- If the file already has other MCP servers, add a comma between entries and do not introduce a trailing comma after the last entry (the file is strict JSON).
 
 ---
 
 ## Step 8 — Restart Claude Code and verify
 
-Restart the Claude Code CLI or desktop app so it re-reads `settings.json`.
+Restart the Claude Code CLI or desktop app so it picks up the new configuration.
+
+Run the following to confirm the server is loaded:
+
+```
+claude mcp list
+```
+
+You should see `dnspy` listed as `Connected`.
 
 In a new session, ask Claude:
 
