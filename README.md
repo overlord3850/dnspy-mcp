@@ -156,6 +156,13 @@ dotnet publish -c Release -r win-x64 --no-self-contained -o binpublish
 
 The EXE will be at `DnSpyHelper/binpublish/DnSpyHelper.exe`.
 
+To build for other platforms (untested — no code changes needed, only the runtime identifier changes):
+
+```
+dotnet publish -c Release -r linux-x64 --no-self-contained -o binpublish
+dotnet publish -c Release -r osx-arm64 --no-self-contained -o binpublish
+```
+
 See [SETUP.md](SETUP.md) for the full step-by-step guide.
 
 ---
@@ -209,7 +216,7 @@ the target assembly, so the host/target architecture mismatch is irrelevant.
 
 ## Limitations
 
-- **Windows x64 only** — `DnSpyHelper.exe` is compiled for `win-x64`. Linux/macOS users must build from source with the appropriate runtime identifier.
+- **Windows x64 only (pre-built)** — the release ships `win-x64`. Linux/macOS users can build from source with a different runtime identifier (see [Build from source](#build-from-source)) — no code changes required, but these platforms are untested.
 - **Static analysis only** — no debugger, no breakpoints, no live stepping. For runtime debugging, you still need the dnSpy GUI.
 - **No IL editing/patching** — this tool reads and decompiles assemblies but cannot modify or save patched binaries. Use dnSpy GUI or dnlib directly for binary patching.
 - **No obfuscation handling** — heavily obfuscated assemblies (Confuser, Dotfuscator, etc.) may produce degraded or unreadable decompilation output. Same limitation as dnSpy itself.
