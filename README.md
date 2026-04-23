@@ -38,12 +38,15 @@ All tools accept an optional `assembly_path` parameter to override the default a
 
 ---
 
-## Requirements
+## Dependencies
 
-- Windows x64
-- [.NET 9 runtime](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
-- Python 3.10+
-- `mcp>=1.2.0,<2`
+| Dependency | Version | Purpose |
+|---|---|---|
+| [.NET 9 runtime](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) | 9.0+ | Required to run `DnSpyHelper.exe` |
+| [Python](https://www.python.org/downloads/) | 3.10+ | Runs the MCP bridge |
+| [`mcp`](https://pypi.org/project/mcp/) (PyPI) | >=1.2.0, <2 | FastMCP server framework |
+| [dnlib](https://www.nuget.org/packages/dnlib) | 4.4.0 | .NET metadata reading, IL inspection (bundled in EXE) |
+| [ICSharpCode.Decompiler](https://www.nuget.org/packages/ICSharpCode.Decompiler) | 9.0.0.7889 | C# decompilation engine (bundled in EXE) |
 
 ---
 
@@ -201,3 +204,15 @@ DnSpyHelper.exe           ← .NET 9 CLI helper
 **Target assembly architecture:** Both x86 and x64 .NET assemblies are supported.
 dnlib and ICSharpCode.Decompiler perform static file analysis — they never execute
 the target assembly, so the host/target architecture mismatch is irrelevant.
+
+---
+
+## Limitations
+
+- **Windows x64 only** — `DnSpyHelper.exe` is compiled for `win-x64`. Linux/macOS users must build from source with the appropriate runtime identifier.
+- **Static analysis only** — no debugger, no breakpoints, no live stepping. For runtime debugging, you still need the dnSpy GUI.
+- **No IL editing/patching** — this tool reads and decompiles assemblies but cannot modify or save patched binaries. Use dnSpy GUI or dnlib directly for binary patching.
+- **No obfuscation handling** — heavily obfuscated assemblies (Confuser, Dotfuscator, etc.) may produce degraded or unreadable decompilation output. Same limitation as dnSpy itself.
+- **Single-assembly scope** — each tool call operates on one assembly at a time. Cross-assembly analysis (e.g. `find_callers`) requires specifying the correct assembly that contains the call sites.
+- **No PDB/source mapping** — decompiled output uses compiler-generated names; original variable names and line numbers are not recovered unless a PDB file is present alongside the assembly.
+- **Not self-contained** — `DnSpyHelper.exe` requires .NET 9 runtime installed on the machine. It is not a standalone single-file executable.
