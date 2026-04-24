@@ -8,6 +8,8 @@ Uses the same libraries dnSpy uses internally:
 
 Exposes 10 tools as `mcp__dnspy__*` that Claude can call autonomously during reverse engineering sessions.
 
+**Blog post:** [How I built this and used it to find SQL injection in a .NET thick client](https://medium.com/@0verl0rd/i-built-a-dnspy-mcp-so-claude-code-can-reverse-engineer-net-binaries-autonomously-064629fabe64)
+
 ---
 
 ## Why this exists
